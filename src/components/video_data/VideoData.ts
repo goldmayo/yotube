@@ -43,4 +43,10 @@ export type VideoData = {
     };
     defaultAudioLanguage: string;
   };
+  statistics: {
+    viewCount: string;
+    likeCount: string;
+    favoriteCount: string;
+    commentCount: string;
+  };
 };
