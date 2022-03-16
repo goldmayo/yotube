@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./app.css";
+import styles from "./app.module.css";
 import VideoList from "components/video_list/VideoList";
 import { VideoData } from "components/video_data/VideoData";
+import SearchHeader from "components/search_header/SearchHeader";
 
 const App = () => {
   const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
@@ -25,7 +26,12 @@ const App = () => {
       .catch((error) => console.log("!Error : fetching videos from youtube fail.", error));
   }, []);
 
-  return <>{videos.length === 0 ? <h1>loading...</h1> : <VideoList videos={videos} />}</>;
+  return (
+    <div className={styles.app}>
+      <SearchHeader />
+      <VideoList videos={videos} />
+    </div>
+  );
 };
 
 export default App;
