@@ -23,30 +23,65 @@ export type VideoData = {
         width: number;
         height: number;
       };
-      standard: {
+      standard?: {
         url: string;
         width: number;
         height: number;
       };
-      maxres: {
+      maxres?: {
         url: string;
         width: number;
         height: number;
       };
     };
     channelTitle: string;
-    categoryId: string;
+    categoryId?: string;
     liveBroadcastContent: string;
-    localized: {
+    localized?: {
       title: string;
       description: string;
     };
-    defaultAudioLanguage: string;
+    defaultAudioLanguage?: string;
   };
   statistics: {
     viewCount: string;
     likeCount: string;
     favoriteCount: string;
     commentCount: string;
+  };
+};
+
+export type SearchVideoItemsData = {
+  kind: string;
+  etag: string;
+  id: {
+    kind: string;
+    videoId: string;
+  };
+  snippet: {
+    publishedAt: string;
+    channelId: string;
+    title: string;
+    description: string;
+    thumbnails: {
+      default: {
+        url: string;
+        width: number;
+        height: number;
+      };
+      medium: {
+        url: string;
+        width: number;
+        height: number;
+      };
+      high: {
+        url: string;
+        width: number;
+        height: number;
+      };
+    };
+    channelTitle: string;
+    liveBroadcastContent: string;
+    publishTime?: string;
   };
 };

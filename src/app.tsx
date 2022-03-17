@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from "react";
 import styles from "./app.module.css";
-import VideoList from "components/video_list/VideoList";
 import { VideoData } from "components/video_data/VideoData";
+import VideoList from "components/video_list/VideoList";
 import SearchHeader from "components/search_header/SearchHeader";
+import YotubeService from "./services/yotubeService";
+type AppProps = {
+  yotube: YotubeService;
+};
 
-const App = () => {
-  const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
+const App = ({ yotube }: AppProps) => {
   const [videos, setVideos] = useState<VideoData[]>([]);
+
+  const SearchQuery = async (query: string) => {
+    let searchResult = await yotube.search(query);
+    setVideos(searchResult);
+  };
+
   useEffect(() => {
-    const requestOptions: RequestInit = {
-      method: "GET",
-      redirect: "follow",
+    const getMostPopularKR = async () => {
+      let vids = await yotube.mostPopular();
+      setVideos(vids.items);
     };
-    console.log("fetching from youtube...");
-    fetch(
-      `${BASE_URL}/videos?part=snippet&part=statistics&chart=mostPopular&maxResults=25&regionCode=KR&key=${API_KEY}`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setVideos(result.items);
-        console.log("fetching success");
-      })
-      .catch((error) => console.log("!Error : fetching videos from youtube fail.", error));
+    getMostPopularKR();
   }, []);
 
   return (
     <div className={styles.app}>
-      <SearchHeader />
+      <SearchHeader onSearch={SearchQuery} />
       <VideoList videos={videos} />
     </div>
   );
