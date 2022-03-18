@@ -35,26 +35,32 @@ export default class YotubeService {
   };
 
   search = async (query: string) => {
-    let rawData = await this.handleSearch(query);
-    let IdData = rawData.items.map((item: SearchVideoData) => ({
+    let searchData = await this.fetchSearch(query);
+    let searchIdData = searchData.items.map((item: SearchVideoData) => ({
       ...item,
       id: item.id.videoId,
     }));
     let IdStatData = await Promise.all(
-      IdData.map(async (item: VideoData) => {
-        let statData = await this.fetchStatistics(item.id);
-        return { ...item, statistics: statData.items[0].statistics };
+      searchIdData.map(async (item: VideoData) => {
+        let statisticsData = await this.fetchStatistics(item.id);
+        let channelData = await this.fetchChannelInfo(item.snippet.channelId);
+        return {
+          ...item,
+          statistics: statisticsData.items[0].statistics,
+          channelThumbnail: channelData.items[0].snippet.thumbnails.default.url,
+        };
       })
     );
+
     return IdStatData;
   };
 
-  handleSearch = async (query: string) => {
-    let searchData = await fetch(
+  fetchSearch = async (query: string) => {
+    let response = await fetch(
       `${this.BASE_URL}/search?part=snippet&maxResults=25&q=${query}&type=video&key=${this.key}`,
       this.requestOptions
     );
-    return searchData.json();
+    return response.json();
   };
 
   fetchStatistics = async (videoId: string) => {
