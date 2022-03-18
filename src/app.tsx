@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./app.module.css";
-import { VideoData } from "components/video_data/VideoData";
 import VideoList from "components/video_list/VideoList";
 import SearchHeader from "components/search_header/SearchHeader";
 import YotubeService from "./services/yotubeService";
+import { VideoData } from "components/data_forms/video_data/VideoData";
+
 type AppProps = {
   yotube: YotubeService;
 };
@@ -19,7 +20,7 @@ const App = ({ yotube }: AppProps) => {
   useEffect(() => {
     const getMostPopularKR = async () => {
       let vids = await yotube.mostPopular();
-      setVideos(vids.items);
+      setVideos(vids);
     };
     getMostPopularKR();
   }, []);

@@ -20,13 +20,25 @@
 
 .thumbnail {
   width: 90%;
-
-  margin-bottom: 0.1em;
+  margin-bottom: 0.2em;
 }
 
 .metadata {
-  margin-left: 0.2em;
+  display: flex;
   width: 90%;
+}
+
+.channelThumbnail {
+  border: 1px solid darkgray;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+}
+
+.textdata {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.3em;
 }
 
 .title,

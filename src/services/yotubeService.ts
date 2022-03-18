@@ -1,4 +1,6 @@
-import { SearchVideoItemsData, VideoData } from "components/video_data/VideoData";
+import { SearchVideoData } from "components/data_forms/search_video_data/SearchVideoData";
+import { VideoData } from "components/data_forms/video_data/VideoData";
+import { ChannelData } from "components/data_forms/channel_data/ChannelData";
 
 export default class YotubeService {
   private readonly key: string;
@@ -14,6 +16,17 @@ export default class YotubeService {
   }
 
   mostPopular = async () => {
+    let mostPopularData = await this.fetchMostPopular();
+    let withChannelThumbnailData = await Promise.all(
+      mostPopularData.items.map(async (item: VideoData) => {
+        let channelInfo: ChannelData = await this.fetchChannelInfo(item.snippet.channelId);
+        return { ...item, channelThumbnail: channelInfo.items[0].snippet.thumbnails.default.url };
+      })
+    );
+    return withChannelThumbnailData;
+  };
+
+  fetchMostPopular = async () => {
     let response = await fetch(
       `${this.BASE_URL}/videos?part=snippet&part=statistics&chart=mostPopular&maxResults=25&regionCode=KR&key=${this.key}`,
       this.requestOptions
@@ -23,7 +36,7 @@ export default class YotubeService {
 
   search = async (query: string) => {
     let rawData = await this.handleSearch(query);
-    let IdData = rawData.items.map((item: SearchVideoItemsData) => ({
+    let IdData = rawData.items.map((item: SearchVideoData) => ({
       ...item,
       id: item.id.videoId,
     }));
@@ -50,5 +63,13 @@ export default class YotubeService {
       this.requestOptions
     );
     return videoStatisticsData.json();
+  };
+
+  fetchChannelInfo = async (channelId: string) => {
+    let resonse = await fetch(
+      `${this.BASE_URL}/channels?part=snippet&id=${channelId}&key=${this.key}`,
+      this.requestOptions
+    );
+    return resonse.json();
   };
 }

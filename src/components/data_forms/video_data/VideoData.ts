@@ -1,4 +1,5 @@
 export type VideoData = {
+  channelThumbnail?: string;
   kind: string;
   etag: string;
   id: string;
@@ -48,40 +49,5 @@ export type VideoData = {
     likeCount: string;
     favoriteCount: string;
     commentCount: string;
-  };
-};
-
-export type SearchVideoItemsData = {
-  kind: string;
-  etag: string;
-  id: {
-    kind: string;
-    videoId: string;
-  };
-  snippet: {
-    publishedAt: string;
-    channelId: string;
-    title: string;
-    description: string;
-    thumbnails: {
-      default: {
-        url: string;
-        width: number;
-        height: number;
-      };
-      medium: {
-        url: string;
-        width: number;
-        height: number;
-      };
-      high: {
-        url: string;
-        width: number;
-        height: number;
-      };
-    };
-    channelTitle: string;
-    liveBroadcastContent: string;
-    publishTime?: string;
   };
 };
