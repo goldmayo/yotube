@@ -2,6 +2,15 @@ import { SearchVideoData } from "components/data_forms/search_video_data/SearchV
 import { VideoData } from "components/data_forms/video_data/VideoData";
 import { ChannelData } from "components/data_forms/channel_data/ChannelData";
 
+export interface IYotubeService {
+  mostPopular: () => Promise<any[]>;
+  fetchMostPopular: () => Promise<any>;
+  search: (query: string) => Promise<any[]>;
+  fetchSearch: (query: string) => Promise<any>;
+  fetchStatistics: (videoId: string) => Promise<any>;
+  fetchChannelInfo: (channelId: string) => Promise<any>;
+}
+
 export default class YotubeService {
   private readonly key: string;
   private readonly BASE_URL = process.env.REACT_APP_BASE_URL;

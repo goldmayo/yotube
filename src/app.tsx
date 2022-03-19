@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import styles from "./app.module.css";
 import VideoList from "components/video_list/VideoList";
 import SearchHeader from "components/search_header/SearchHeader";
-import YotubeService from "./services/yotubeService";
 import { VideoData } from "components/data_forms/video_data/VideoData";
+import { ICalcDateTime } from "./services/CalcDateTime";
+import { IYotubeService } from "./services/yotubeService";
 
 type AppProps = {
-  yotube: YotubeService;
+  yotube: IYotubeService;
+  dateCalculator: ICalcDateTime;
 };
 
-const App = ({ yotube }: AppProps) => {
+const App = ({ yotube, dateCalculator }: AppProps) => {
   const [videos, setVideos] = useState<VideoData[]>([]);
 
   const SearchQuery = async (query: string) => {
@@ -28,7 +30,7 @@ const App = ({ yotube }: AppProps) => {
   return (
     <div className={styles.app}>
       <SearchHeader onSearch={SearchQuery} />
-      <VideoList videos={videos} />
+      <VideoList videos={videos} dateCalculator={dateCalculator} />
     </div>
   );
 };
