@@ -5,6 +5,7 @@ import SearchHeader from "components/search_header/SearchHeader";
 import { VideoData } from "components/data_forms/video_data/VideoData";
 import { ICalcDateTime } from "./services/CalcDateTime";
 import { IYotubeService } from "./services/yotubeService";
+import VideoDetail from "components/video_detail/VideoDetail";
 
 type AppProps = {
   yotube: IYotubeService;
@@ -13,6 +14,11 @@ type AppProps = {
 
 const App = ({ yotube, dateCalculator }: AppProps) => {
   const [videos, setVideos] = useState<VideoData[]>([]);
+  const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
+
+  const selectVideo = (video: VideoData) => {
+    setSelectedVideo(video);
+  };
 
   const SearchQuery = async (query: string) => {
     let searchResult = await yotube.search(query);
@@ -30,7 +36,16 @@ const App = ({ yotube, dateCalculator }: AppProps) => {
   return (
     <div className={styles.app}>
       <SearchHeader onSearch={SearchQuery} />
-      <VideoList videos={videos} dateCalculator={dateCalculator} />
+      <section className={styles.content}>
+        {selectedVideo && (
+          <div className={styles.detail}>
+            <VideoDetail video={selectedVideo} />
+          </div>
+        )}
+        <div className={styles.list}>
+          <VideoList videos={videos} dateCalculator={dateCalculator} onVideoClick={selectVideo} />
+        </div>
+      </section>
     </div>
   );
 };

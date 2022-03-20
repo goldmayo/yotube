@@ -6,11 +6,12 @@ import { ICalcDateTime } from "services/CalcDateTime";
 type VideoItemProps = {
   video: VideoData;
   dateCalculator: ICalcDateTime;
+  onVideoClick: (video: VideoData) => void;
 };
 
-const VideoItem = ({ video, dateCalculator }: VideoItemProps) => {
+const VideoItem = ({ video, dateCalculator, onVideoClick }: VideoItemProps) => {
   return (
-    <li className={styles.container}>
+    <li className={styles.container} onClick={() => onVideoClick(video)}>
       <div className={styles.video}>
         <img
           className={styles.thumbnail}
