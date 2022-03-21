@@ -6,9 +6,11 @@ export interface IYotubeService {
   mostPopular: () => Promise<any[]>;
   fetchMostPopular: () => Promise<any>;
   search: (query: string) => Promise<any[]>;
+  searchRelatedVideos: (videoId: string) => Promise<any[]>;
   fetchSearch: (query: string) => Promise<any>;
   fetchStatistics: (videoId: string) => Promise<any>;
   fetchChannelInfo: (channelId: string) => Promise<any>;
+  fetchRelatedVideos: (videoId: string) => Promise<any[]>;
 }
 
 export default class YotubeService {
@@ -64,6 +66,25 @@ export default class YotubeService {
     return IdStatData;
   };
 
+  searchRelatedVideos = async (videoId: string) => {
+    let rawRelatedVideos = await this.fetchRelatedVideos(videoId);
+    let hasSnippets = rawRelatedVideos.items
+      .filter((item: SearchVideoData) => item.hasOwnProperty("snippet"))
+      .map((item: SearchVideoData) => ({ ...item, id: item.id.videoId }));
+    let relatedVideos = await Promise.all(
+      hasSnippets.map(async (item: VideoData) => {
+        let statisticsData = await this.fetchStatistics(item.id);
+        let channelData = await this.fetchChannelInfo(item.snippet.channelId);
+        return {
+          ...item,
+          statistics: statisticsData.items[0].statistics,
+          channelThumbnail: channelData.items[0].snippet.thumbnails.default.url,
+        };
+      })
+    );
+    return relatedVideos;
+  };
+
   fetchSearch = async (query: string) => {
     let response = await fetch(
       `${this.BASE_URL}/search?part=snippet&maxResults=25&q=${query}&type=video&key=${this.key}`,
@@ -86,5 +107,13 @@ export default class YotubeService {
       this.requestOptions
     );
     return resonse.json();
+  };
+
+  fetchRelatedVideos = async (videoId: string) => {
+    let response = await fetch(
+      `${this.BASE_URL}/search?part=snippet&maxResults=25&relatedToVideoId=${videoId}&type=video&key=${this.key}`,
+      this.requestOptions
+    );
+    return response.json();
   };
 }

@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./VideoItem.module.css";
 import { VideoData } from "components/data_forms/video_data/VideoData";
 import { ICalcDateTime } from "services/CalcDateTime";
-
+import { Link } from "react-router-dom";
 type VideoItemProps = {
   video: VideoData;
   dateCalculator: ICalcDateTime;
@@ -12,6 +12,7 @@ type VideoItemProps = {
 const VideoItem = ({ video, dateCalculator, onVideoClick }: VideoItemProps) => {
   return (
     <li className={styles.container} onClick={() => onVideoClick(video)}>
+      {/* <Link to={`/detail?watch=${video.id}`}> */}
       <div className={styles.video}>
         <img
           className={styles.thumbnail}
@@ -36,6 +37,7 @@ const VideoItem = ({ video, dateCalculator, onVideoClick }: VideoItemProps) => {
           </div>
         </div>
       </div>
+      {/* </Link> */}
     </li>
   );
 };
