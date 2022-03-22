@@ -6,13 +6,14 @@ import { ICalcDateTime } from "services/CalcDateTime";
 type RelatedVideosProps = {
   videos: VideoData[];
   dateCalculator: ICalcDateTime;
-  onVideoClick: (video: VideoData) => void;
+  onVideoClick: (videoId: VideoData) => void;
+  display: string;
 };
 
-const RelatedVideos = ({ videos, dateCalculator, onVideoClick }: RelatedVideosProps) => {
+const RelatedVideos = ({ videos, dateCalculator, onVideoClick, display }: RelatedVideosProps) => {
   return (
     <>
-      <VideoList videos={videos} dateCalculator={dateCalculator} onVideoClick={onVideoClick} />
+      <VideoList videos={videos} dateCalculator={dateCalculator} onVideoClick={onVideoClick} display={display} />
     </>
   );
 };

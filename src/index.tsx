@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import { BrowserRouter } from "react-router-dom";
 import App from "./app";
 import YotubeService from "./services/yotubeService";
 import CalcDateTime from "services/CalcDateTime";
@@ -9,7 +10,9 @@ const dateCalculator = new CalcDateTime();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App yotube={yotube} dateCalculator={dateCalculator} />
+    <BrowserRouter>
+      <App yotube={yotube} dateCalculator={dateCalculator} />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

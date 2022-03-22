@@ -8,13 +8,20 @@ type VideoListProps = {
   videos: VideoData[];
   dateCalculator: ICalcDateTime;
   onVideoClick: (video: VideoData) => void;
+  display: string;
 };
 
-const VideoList = ({ videos, dateCalculator, onVideoClick }: VideoListProps) => {
+const VideoList = ({ videos, dateCalculator, onVideoClick, display }: VideoListProps) => {
   return (
     <ul className={styles.videos}>
       {videos?.map((video) => (
-        <VideoItem key={video.id} video={video} dateCalculator={dateCalculator} onVideoClick={onVideoClick} />
+        <VideoItem
+          key={video.id}
+          video={video}
+          dateCalculator={dateCalculator}
+          onVideoClick={onVideoClick}
+          display={display}
+        />
       ))}
     </ul>
   );
