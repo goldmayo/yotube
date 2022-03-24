@@ -1,10 +1,8 @@
-import { AxiosInstance } from "axios";
 import { SearchVideoData } from "components/data_forms/search_video_data/SearchVideoData";
 import { VideoData } from "components/data_forms/video_data/VideoData";
 import { ChannelData } from "components/data_forms/channel_data/ChannelData";
-import qs from "qs";
 
-export interface IYotubeService {
+export interface IYotubeServiceFetch {
   mostPopular: () => Promise<any[]>;
   fetchMostPopular: () => Promise<any>;
   search: (query: string) => Promise<any[]>;
@@ -15,11 +13,17 @@ export interface IYotubeService {
   fetchRelatedVideos: (videoId: string) => Promise<any[]>;
 }
 
-export default class YotubeService {
-  // private readonly key = process.env.REACT_APP_YOUTUBE_API_KEY;
-  private yotube;
-  constructor(httpClient: AxiosInstance) {
-    this.yotube = httpClient;
+export default class YotubeServiceFetch {
+  private readonly key: string;
+  private readonly BASE_URL = process.env.REACT_APP_BASE_URL;
+  readonly requestOptions: RequestInit;
+
+  constructor(key: string) {
+    this.key = key;
+    this.requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
   }
 
   mostPopular = async () => {
@@ -34,19 +38,11 @@ export default class YotubeService {
   };
 
   fetchMostPopular = async () => {
-    const response = await this.yotube.get("/videos", {
-      params: {
-        part: ["snippet", "statistics"],
-        chart: "mostPopular",
-        maxResults: 25,
-        regionCode: "KR",
-      },
-      paramsSerializer: (params) => {
-        return qs.stringify(params, { indices: false });
-      },
-    });
-
-    return response.data;
+    let response = await fetch(
+      `${this.BASE_URL}/videos?part=snippet&part=statistics&chart=mostPopular&maxResults=25&regionCode=KR&key=${this.key}`,
+      this.requestOptions
+    );
+    return response.json();
   };
 
   search = async (query: string) => {
@@ -90,46 +86,34 @@ export default class YotubeService {
   };
 
   fetchSearch = async (query: string) => {
-    const response = await this.yotube.get("/search", {
-      params: {
-        part: "snippet",
-        type: "video",
-        maxResults: 25,
-        q: `${query}`,
-      },
-    });
-    return response.data;
+    let response = await fetch(
+      `${this.BASE_URL}/search?part=snippet&maxResults=25&q=${query}&type=video&key=${this.key}`,
+      this.requestOptions
+    );
+    return response.json();
   };
 
   fetchStatistics = async (videoId: string) => {
-    const response = await this.yotube.get("/videos", {
-      params: {
-        part: "statistics",
-        id: `${videoId}`,
-      },
-    });
-    return response.data;
+    let videoStatisticsData = await fetch(
+      `${this.BASE_URL}/videos?part=statistics&id=${videoId}&key=${this.key}`,
+      this.requestOptions
+    );
+    return videoStatisticsData.json();
   };
 
   fetchChannelInfo = async (channelId: string) => {
-    const response = await this.yotube.get("/channels", {
-      params: {
-        part: "snippet",
-        id: `${channelId}`,
-      },
-    });
-    return response.data;
+    let resonse = await fetch(
+      `${this.BASE_URL}/channels?part=snippet&id=${channelId}&key=${this.key}`,
+      this.requestOptions
+    );
+    return resonse.json();
   };
 
   fetchRelatedVideos = async (videoId: string) => {
-    const response = await this.yotube.get("/search", {
-      params: {
-        part: "snippet",
-        relatedToVideoId: `${videoId}`,
-        maxResults: 25,
-        type: "video",
-      },
-    });
-    return response.data;
+    let response = await fetch(
+      `${this.BASE_URL}/search?part=snippet&maxResults=25&relatedToVideoId=${videoId}&type=video&key=${this.key}`,
+      this.requestOptions
+    );
+    return response.json();
   };
 }

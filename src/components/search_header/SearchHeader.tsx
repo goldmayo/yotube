@@ -3,11 +3,17 @@ import styles from "./SearchHeader.module.css";
 
 type SearchHeaderProps = {
   onSearch: (query: string) => void;
+  onImageClick: () => void;
 };
 
-const SearchHeader = ({ onSearch }: SearchHeaderProps) => {
+const SearchHeader = ({ onSearch, onImageClick }: SearchHeaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const onLogoClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    event.preventDefault();
+    console.log("logo clicked");
+    onImageClick();
+  };
   const handleSearch = () => {
     if (inputRef.current) {
       const value: string = inputRef.current.value;
@@ -26,7 +32,7 @@ const SearchHeader = ({ onSearch }: SearchHeaderProps) => {
   };
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>
+      <div className={styles.logo} onClick={onLogoClick}>
         <img className={styles.img} src="/images/logo.png" alt="logo" />
         <h1 className={styles.title}>Yotube</h1>
       </div>
@@ -38,4 +44,4 @@ const SearchHeader = ({ onSearch }: SearchHeaderProps) => {
   );
 };
 
-export default SearchHeader;
+export default React.memo(SearchHeader);
